@@ -5,8 +5,9 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Link as LinkIcon, Copy } from "lucide-react";
+import { CheckCircle, Link as LinkIcon, Copy, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 type BirthdayData = {
   recipientName: string;
@@ -58,39 +59,44 @@ function SuccessContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 md:py-20 animate-fade-in">
-      <Card className="max-w-2xl mx-auto shadow-xl border-primary/20">
-        <CardHeader className="text-center">
-          <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-          <CardTitle className="font-headline text-3xl text-primary">
+    <div className="min-h-screen bg-gradient-to-br from-background to-rose-50 flex items-center justify-center p-4">
+      <Card className="max-w-2xl w-full mx-auto shadow-2xl border-primary/20 animate-fade-in rounded-2xl">
+        <CardHeader className="text-center p-8">
+          <div className="mx-auto h-20 w-20 bg-green-100 rounded-full flex items-center justify-center mb-4 border-4 border-green-200">
+            <CheckCircle className="h-12 w-12 text-green-600" />
+          </div>
+          <CardTitle className="font-headline text-4xl text-primary">
             Your Message is Ready!
           </CardTitle>
-          <CardDescription className="text-lg">
-            Share this special birthday message with {data.recipientName} on their birthday, {data.birthday}.
+          <CardDescription className="text-lg text-muted-foreground mt-2">
+            Share this special birthday page with {data.recipientName} on their birthday!
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <h3 className="font-bold mb-2 flex items-center gap-2"><LinkIcon className="w-4 h-4"/> Your Sharable Link</h3>
-            <p className="text-sm text-muted-foreground mb-3">Copy this link and send it to {data.recipientName}!</p>
+        <CardContent className="space-y-6 p-8 pt-0">
+          <div className="p-6 bg-primary/5 rounded-xl border border-primary/10">
+            <h3 className="font-bold text-lg mb-2 flex items-center gap-2 text-primary"><LinkIcon className="w-5 h-5"/> Your Sharable Link</h3>
+            <p className="text-sm text-muted-foreground mb-4">Copy this link and send it to {data.recipientName}. Anyone with the link can view the message.</p>
             <div className="flex items-center gap-2">
-                <input type="text" readOnly value={`${(typeof window !== 'undefined' && window.location.origin) || ''}${uniqueUrl}`} className="w-full bg-background p-2 rounded-md border text-sm" />
+                <input type="text" readOnly value={`${(typeof window !== 'undefined' && window.location.origin) || ''}${uniqueUrl}`} className="w-full bg-background p-2 rounded-lg border text-sm" />
                 <Button variant="outline" size="icon" onClick={copyToClipboard} aria-label="Copy link">
                   <Copy className="w-4 h-4" />
                 </Button>
             </div>
-            <div className="mt-4">
-                <Link href={uniqueUrl} passHref target="_blank">
-                    <Button className="w-full bg-accent hover:bg-accent/90">Preview Your Message</Button>
-                </Link>
-            </div>
           </div>
           
-          <div className="p-4 border-t">
-            <h3 className="font-bold mb-2 text-center text-muted-foreground">What to do next</h3>
-             <div className="text-center text-sm text-foreground">
-                <p>1. Copy the link above.</p>
-                <p>2. On {data.birthday}, send it to {data.recipientName} via email, text, or any way you like!</p>
+          <div className="text-center">
+             <Link href={uniqueUrl} passHref target="_blank">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg py-6 px-8 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                    Preview Your Message
+                  </Button>
+              </Link>
+          </div>
+          
+           <div className="p-6 border-t mt-6">
+             <div className="text-center text-foreground space-y-2">
+                <Gift className="w-8 h-8 mx-auto text-primary" />
+                <p className="font-bold">Happy sharing!</p>
+                <p className="text-sm text-muted-foreground">On {data.birthday}, send the link to {data.recipientName} via email, text, or any way you like!</p>
             </div>
           </div>
         </CardContent>

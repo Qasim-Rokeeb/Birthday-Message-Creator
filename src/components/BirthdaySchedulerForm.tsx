@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, WandSparkles, Loader2, Send, CalendarPlus, ImagePlus, User, Mail } from "lucide-react";
+import { CalendarIcon, WandSparkles, Loader2, Send, Gift, ImagePlus, User, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { MessagePreview } from "@/components/MessagePreview";
 import { generateMessageSuggestions } from "@/ai/flows/generate-message-suggestions";
 import { useToast } from "@/hooks/use-toast";
@@ -30,16 +30,13 @@ import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   senderName: z.string().min(2, {
-    message: "Sender's name must be at least 2 characters.",
+    message: "Your name must be at least 2 characters.",
   }),
   recipientName: z.string().min(2, {
     message: "Recipient's name must be at least 2 characters.",
   }),
-  recipientEmail: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
   birthday: z.date({
-    required_error: "A birthday is required.",
+    required_error: "Their birthday is required.",
   }),
   message: z.string().min(10, {
     message: "Message must be at least 10 characters.",
@@ -53,6 +50,7 @@ export function BirthdaySchedulerForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSuggesting, setIsSuggesting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,14 +58,11 @@ export function BirthdaySchedulerForm() {
     defaultValues: {
       senderName: "",
       recipientName: "",
-      recipientEmail: "",
       message: "",
     },
   });
 
-  const recipientName = form.watch("recipientName");
-  const senderName = form.watch("senderName");
-  const message = form.watch("message");
+  const { recipientName, senderName, message } = form.watch();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -121,7 +116,8 @@ export function BirthdaySchedulerForm() {
     }
   };
 
-  const onSubmit = (values: z.infer<typeof formSchema>, sentNow: boolean) => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
     const data = {
       ...values,
       birthday: format(values.birthday, 'PPP'),
@@ -131,63 +127,57 @@ export function BirthdaySchedulerForm() {
     delete data.image; // remove the File object if it exists
     const finalData = {...data, imageDataUrl};
     const encodedData = btoa(JSON.stringify(finalData));
-    router.push(`/success?data=${encodedData}&sent=${sentNow}`);
+    router.push(`/success?data=${encodedData}`);
   };
 
   return (
     <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-start">
-      <Card className="shadow-lg border-primary/20">
+      <Card className="shadow-2xl border-primary/10 rounded-2xl">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl text-primary">Create Your Message</CardTitle>
+          <CardTitle className="font-headline text-3xl text-primary flex items-center gap-3">
+            <Gift className="w-8 h-8" />
+            Create Your Message
+          </CardTitle>
+          <CardDescription>Fill in the details to create a personalized birthday page.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form className="space-y-6">
-               <FormField
-                control={form.control}
-                name="senderName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2"><User /> Your Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. John Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="recipientName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2"><User /> Recipient's Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Jane Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="recipientEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Mail /> Recipient's Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="e.g. jane.doe@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid sm:grid-cols-2 gap-4">
+                 <FormField
+                  control={form.control}
+                  name="senderName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2"><User className="w-4 h-4" /> Your Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Alex" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="recipientName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2"><User className="w-4 h-4"/> Recipient's Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Jamie" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <FormField
                 control={form.control}
                 name="birthday"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Birthday</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><CalendarIcon className="w-4 h-4" /> Their Birthday</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -201,7 +191,7 @@ export function BirthdaySchedulerForm() {
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span>Pick a date</span>
+                              <span>Pick their birthday</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -212,11 +202,6 @@ export function BirthdaySchedulerForm() {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) => {
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            return date < today;
-                          }}
                           initialFocus
                         />
                       </PopoverContent>
@@ -230,9 +215,9 @@ export function BirthdaySchedulerForm() {
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2"><ImagePlus /> Add an Image (Optional)</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><ImagePlus className="w-4 h-4" /> Add an Image (Optional)</FormLabel>
                     <FormControl>
-                      <Input type="file" accept="image/png, image/jpeg, image/gif" onChange={handleImageChange} />
+                      <Input type="file" accept="image/png, image/jpeg, image/gif" onChange={handleImageChange} className="pt-2"/>
                     </FormControl>
                     <FormDescription>Max file size: 2MB.</FormDescription>
                     <FormMessage />
@@ -252,7 +237,7 @@ export function BirthdaySchedulerForm() {
                         ) : (
                           <WandSparkles className="mr-2 h-4 w-4 text-accent" />
                         )}
-                        Suggest
+                        Suggest with AI
                       </Button>
                     </div>
                     <FormControl>
@@ -267,16 +252,10 @@ export function BirthdaySchedulerForm() {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button type="button" onClick={form.handleSubmit((v) => onSubmit(v, false))} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <CalendarPlus className="mr-2 h-4 w-4"/>
-                  Schedule Message
-                </Button>
-                <Button type="button" onClick={form.handleSubmit((v) => onSubmit(v, true))} className="w-full" variant="secondary">
-                  <Send className="mr-2 h-4 w-4" />
-                  Send Immediately
-                </Button>
-              </div>
+              <Button type="submit" disabled={isSubmitting} className="w-full text-lg py-6 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+                {isSubmitting ? <Loader2 className="animate-spin" /> : <Send />}
+                Create & Get Link
+              </Button>
             </form>
           </Form>
         </CardContent>
