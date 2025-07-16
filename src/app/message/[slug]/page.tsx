@@ -14,9 +14,9 @@ type BirthdayData = {
   recipientName: string;
   senderName: string;
   message: string;
+  birthday: string;
   imageDataUrl?: string;
   template: 'classic' | 'modern' | 'playful' | 'vibrant' | 'cozy' | 'minimalist';
-  birthday: string;
 };
 
 const templates = {
@@ -99,34 +99,32 @@ export default function MessagePage({ params }: { params: { slug: string } }) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    const raw = localStorage.getItem(`msg_${params.slug}`);
+    if (!raw) {
+      setError(true);
+      return;
+    }
     try {
-      const json = atob(decodeURIComponent(params.slug));
-      const parsed: BirthdayData = JSON.parse(json);
-      setData(parsed);
+      setData(JSON.parse(raw));
     } catch {
       setError(true);
     }
   }, [params.slug]);
 
-  if (error) {
+  if (error || !data) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4">
         <Card className="max-w-lg text-center shadow-xl p-8 rounded-2xl">
           <Gift className="w-16 h-16 mx-auto text-gray-400 mb-4" />
           <h2 className="text-2xl font-bold mb-2">Message Not Found</h2>
-          <p className="text-gray-500 mb-6">The link may be invalid or corrupted.</p>
+          <p className="text-gray-500 mb-6">
+            This link was created on another device (or the message expired).<br />
+            Ask the sender to resend it from the same browser they used to create it.
+          </p>
           <Link href="/" passHref>
             <Button>Create New Message</Button>
           </Link>
         </Card>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-xl font-body">
-        Unwrapping your message...
       </div>
     );
   }
