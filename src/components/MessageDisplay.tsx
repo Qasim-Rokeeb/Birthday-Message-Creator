@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSearchParams } from "next/navigation";
@@ -6,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PartyPopper, Gift, Sparkle, Heart, Cake } from "lucide-react";
+import { PartyPopper, Gift, Sparkle, Heart, Cake, Sun } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +16,7 @@ type BirthdayData = {
   senderName: string;
   message: string;
   imageDataUrl?: string;
-  template: 'classic' | 'modern' | 'playful';
+  template: 'classic' | 'modern' | 'playful' | 'vibrant' | 'cozy' | 'minimalist';
 };
 
 const templates = {
@@ -41,8 +42,32 @@ const templates = {
     title: "font-headline text-pink-500",
     prose: "prose-2xl font-body text-gray-700",
     footer: "text-gray-500 font-bold",
+    icon: PartyPopper,
+  },
+   vibrant: {
+    bg: "bg-gradient-to-br from-yellow-200 via-orange-300 to-red-400",
+    card: "bg-white/80 backdrop-blur-lg rounded-3xl border-white/50",
+    title: "font-headline text-orange-600",
+    prose: "prose-2xl font-body text-gray-800",
+    footer: "text-orange-800/80 font-bold",
+    icon: Sun,
+  },
+  cozy: {
+    bg: "bg-gradient-to-br from-green-100 to-teal-100",
+    card: "bg-white/90 backdrop-blur-sm rounded-2xl border-green-200/50 shadow-lg",
+    title: "font-headline text-green-800",
+    prose: "prose-2xl font-body text-gray-600",
+    footer: "text-green-700/90 italic",
     icon: Heart,
   },
+  minimalist: {
+    bg: "bg-gray-100",
+    card: "bg-white rounded-lg border-gray-200",
+    title: "font-sans font-semibold text-gray-800",
+    prose: "prose-xl font-sans text-gray-500",
+    footer: "text-gray-400",
+    icon: Sparkle,
+  }
 };
 
 const Sparkles = () => {
@@ -153,7 +178,6 @@ function MessageContent() {
 
 
 export function MessageDisplay() {
-  // Use Suspense to handle client-side data fetching from URL
   return (
     <Suspense fallback={
         <div className="flex items-center justify-center min-h-screen text-xl font-body text-primary">

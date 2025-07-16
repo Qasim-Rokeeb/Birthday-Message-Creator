@@ -1,15 +1,18 @@
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { PartyPopper, Gift } from "lucide-react";
+import { PartyPopper, Gift, Sun, Heart, Sparkle, Cake } from "lucide-react";
 import Image from "next/image";
+
+type Template = 'classic' | 'modern' | 'playful' | 'vibrant' | 'cozy' | 'minimalist';
 
 type MessagePreviewProps = {
   recipientName: string;
   senderName: string;
   message: string;
   imageDataUrl: string | null;
-  template: 'classic' | 'modern' | 'playful';
+  template: Template;
 };
 
 export function MessagePreview({ recipientName, senderName, message, imageDataUrl, template }: MessagePreviewProps) {
@@ -26,6 +29,18 @@ export function MessagePreview({ recipientName, senderName, message, imageDataUr
     playful: {
         cardBg: "bg-pink-50",
         titleColor: "text-pink-500"
+    },
+    vibrant: {
+        cardBg: "bg-orange-50",
+        titleColor: "text-orange-600"
+    },
+    cozy: {
+        cardBg: "bg-green-50",
+        titleColor: "text-green-800"
+    },
+    minimalist: {
+        cardBg: "bg-gray-50",
+        titleColor: "text-gray-800"
     }
   }
 

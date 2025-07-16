@@ -1,12 +1,13 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, WandSparkles, Loader2, Send, Gift, ImagePlus, User, Mail, Palette } from "lucide-react";
+import { CalendarIcon, WandSparkles, Loader2, Send, Gift, ImagePlus, User, Palette } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,8 +28,9 @@ import { MessagePreview } from "@/components/MessagePreview";
 import { generateMessageSuggestions } from "@/ai/flows/generate-message-suggestions";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import Image from "next/image";
+
+type Template = 'classic' | 'modern' | 'playful' | 'vibrant' | 'cozy' | 'minimalist';
 
 const formSchema = z.object({
   senderName: z.string().min(2, {
@@ -46,18 +48,20 @@ const formSchema = z.object({
     message: "Message must not be longer than 500 characters."
   }),
   image: z.any().optional(),
-  template: z.enum(['classic', 'modern', 'playful'], {
-    required_error: "Please select a template."
-  }),
+  template: z.enum(['classic', 'modern', 'playful', 'vibrant', 'cozy', 'minimalist']),
 });
 
-const templates = [
-  { id: 'classic', name: 'Classic Elegance', image: 'https://placehold.co/150x100.png', hint: 'elegant' },
-  { id: 'modern', name: 'Modern Chic', image: 'https://placehold.co/150x100.png', hint: 'modern' },
-  { id: 'playful', name: 'Playful Fun', image: 'https://placehold.co/150x100.png', hint: 'playful' },
-]
+const templateDetails: Record<Template, { name: string }> = {
+  classic: { name: 'Classic Elegance' },
+  modern: { name: 'Modern Chic' },
+  playful: { name: 'Playful Fun' },
+  vibrant: { name: 'Vibrant Joy' },
+  cozy: { name: 'Cozy Charm' },
+  minimalist: { name: 'Minimalist Peace' },
+};
 
-export function BirthdaySchedulerForm() {
+
+export function BirthdaySchedulerForm({ selectedTemplate }: { selectedTemplate: Template }) {
   const router = useRouter();
   const { toast } = useToast();
   const [isSuggesting, setIsSuggesting] = useState(false);
@@ -70,9 +74,13 @@ export function BirthdaySchedulerForm() {
       senderName: "",
       recipientName: "",
       message: "",
-      template: "classic",
+      template: selectedTemplate,
     },
   });
+  
+  useEffect(() => {
+    form.setValue("template", selectedTemplate);
+  }, [selectedTemplate, form]);
 
   const { recipientName, senderName, message, template } = form.watch();
 
@@ -133,10 +141,10 @@ export function BirthdaySchedulerForm() {
     const data = {
       ...values,
       birthday: format(values.birthday, 'PPP'),
-      image: imageDataUrl, // Pass the data URL
+      image: imageDataUrl,
     };
     // @ts-ignore
-    delete data.image; // remove the File object if it exists
+    delete data.image; 
     const finalData = {...data, imageDataUrl};
     const encodedData = btoa(JSON.stringify(finalData));
     router.push(`/success?data=${encodedData}`);
@@ -150,7 +158,9 @@ export function BirthdaySchedulerForm() {
             <Gift className="w-8 h-8" />
             Create Your Message
           </CardTitle>
-          <CardDescription>Fill in the details to create a personalized birthday page.</CardDescription>
+          <CardDescription>
+            You&apos;ve selected the <span className="font-bold text-primary">{templateDetails[template].name}</span> template. Now, let&apos;s personalize it!
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -259,46 +269,6 @@ export function BirthdaySchedulerForm() {
                         rows={5}
                         {...field}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="template"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="flex items-center gap-2"><Palette className="w-4 h-4" /> Choose a Template</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="grid grid-cols-2 md:grid-cols-3 gap-4"
-                      >
-                        {templates.map((template) => (
-                           <FormItem key={template.id} className="relative">
-                              <FormControl>
-                                <RadioGroupItem value={template.id} className="sr-only" />
-                              </FormControl>
-                              <FormLabel className={cn(
-                                "flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all",
-                                field.value === template.id && "border-primary"
-                              )}>
-                                <Image 
-                                  src={template.image} 
-                                  alt={template.name}
-                                  width={150} 
-                                  height={100}
-                                  className="rounded-md object-cover"
-                                  data-ai-hint={template.hint}
-                                />
-                                <span className="font-semibold mt-2 text-sm">{template.name}</span>
-                              </FormLabel>
-                           </FormItem>
-                        ))}
-                      </RadioGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
