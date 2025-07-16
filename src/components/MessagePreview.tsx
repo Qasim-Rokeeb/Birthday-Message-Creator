@@ -4,6 +4,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { PartyPopper, Gift, Sun, Heart, Sparkle, Cake } from "lucide-react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 type Template = 'classic' | 'modern' | 'playful' | 'vibrant' | 'cozy' | 'minimalist';
 
@@ -19,43 +20,44 @@ export function MessagePreview({ recipientName, senderName, message, imageDataUr
   
   const templateStyles = {
     classic: {
-        cardBg: "bg-card/80",
+        cardBg: "bg-gradient-to-br from-gray-50 to-gray-100",
         titleColor: "text-primary"
     },
     modern: {
-        cardBg: "bg-slate-800",
+        cardBg: "bg-gradient-to-br from-slate-900 to-slate-800",
         titleColor: "text-white"
     },
     playful: {
-        cardBg: "bg-pink-50",
+        cardBg: "bg-gradient-to-br from-purple-200 via-rose-200 to-amber-200",
         titleColor: "text-pink-500"
     },
     vibrant: {
-        cardBg: "bg-orange-50",
+        cardBg: "bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-yellow-200 via-red-500 to-fuchsia-500",
         titleColor: "text-orange-600"
     },
     cozy: {
-        cardBg: "bg-green-50",
+        cardBg: "bg-gradient-to-br from-emerald-100 to-sky-200",
         titleColor: "text-green-800"
     },
     minimalist: {
-        cardBg: "bg-gray-50",
+        cardBg: "bg-gradient-to-br from-slate-50 to-white",
         titleColor: "text-gray-800"
     }
   }
 
   const styles = templateStyles[template] || templateStyles.classic;
+  const isDark = template === 'modern';
 
   return (
-    <Card className={`backdrop-blur-sm border-primary/20 shadow-xl transition-all duration-300 rounded-2xl ${styles.cardBg}`}>
+    <Card className={cn("backdrop-blur-sm border-primary/20 shadow-xl transition-all duration-300 rounded-2xl", styles.cardBg)}>
       <CardHeader className="text-center">
-        <CardDescription>PREVIEW</CardDescription>
+        <CardDescription className={cn(isDark ? "text-slate-400" : "text-muted-foreground")}>PREVIEW</CardDescription>
         <div className="flex justify-center items-center gap-4 mt-2">
-          <Gift className={`w-8 h-8 ${styles.titleColor} animate-pulse`} />
-          <CardTitle className={`font-headline text-3xl ${styles.titleColor}`}>
+          <Gift className={cn("w-8 h-8 animate-pulse", styles.titleColor)} />
+          <CardTitle className={cn("font-headline text-3xl", styles.titleColor)}>
             Happy Birthday, {recipientName || "..."}!
           </CardTitle>
-          <PartyPopper className={`w-8 h-8 ${styles.titleColor} animate-pulse`} />
+          <PartyPopper className={cn("w-8 h-8 animate-pulse", styles.titleColor)} />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -73,12 +75,15 @@ export function MessagePreview({ recipientName, senderName, message, imageDataUr
             <p className="text-muted-foreground text-sm">Image will appear here</p>
           </div>
         )}
-        <div className="prose prose-lg mx-auto text-center font-body text-card-foreground min-h-[120px] bg-muted/30 p-4 rounded-lg">
+        <div className={cn(
+            "prose prose-lg mx-auto text-center font-body min-h-[120px] p-4 rounded-lg", 
+            isDark ? "text-slate-300 bg-black/20" : "text-card-foreground bg-muted/30"
+          )}>
           <p>{message || "Your message will appear here..."}</p>
         </div>
       </CardContent>
       <CardFooter className="justify-end">
-         <p className="font-body text-muted-foreground italic">With love, from {senderName || "..."}</p>
+         <p className={cn("font-body italic", isDark ? "text-slate-400" : "text-muted-foreground")}>With love, from {senderName || "..."}</p>
       </CardFooter>
     </Card>
   );
