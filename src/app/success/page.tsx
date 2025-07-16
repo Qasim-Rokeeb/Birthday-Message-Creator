@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSearchParams } from "next/navigation";
@@ -24,16 +25,19 @@ function SuccessContent() {
   const [uniqueUrl, setUniqueUrl] = useState("");
 
   useEffect(() => {
-    const encodedData = searchParams.get("data");
+    const id = searchParams.get("id");
 
-    if (encodedData) {
+    if (id) {
       try {
-        const decodedData = atob(encodedData);
-        const parsedData: BirthdayData = JSON.parse(decodedData);
-        setData(parsedData);
-        const randomId = Math.random().toString(36).substring(2, 10);
-        const url = `/message/${randomId}?data=${encodedData}`;
-        setUniqueUrl(url);
+        const storedData = sessionStorage.getItem(`birthday_data_${id}`);
+        if(storedData) {
+          const parsedData: BirthdayData = JSON.parse(storedData);
+          setData(parsedData);
+          const url = `/message/${id}`;
+          setUniqueUrl(url);
+        } else {
+            console.error("No data found in session storage for this id.");
+        }
       } catch (error) {
         console.error("Failed to parse data:", error);
       }

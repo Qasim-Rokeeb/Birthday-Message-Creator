@@ -145,9 +145,10 @@ export function BirthdaySchedulerForm({ selectedTemplate }: { selectedTemplate: 
       birthday: format(values.birthday, 'PPP'),
       imageDataUrl: imageDataUrl,
     };
-
-    const encodedData = btoa(JSON.stringify(data));
-    router.push(`/success?data=${encodedData}`);
+    
+    const randomId = Math.random().toString(36).substring(2, 10);
+    sessionStorage.setItem(`birthday_data_${randomId}`, JSON.stringify(data));
+    router.push(`/success?id=${randomId}`);
   };
 
   return (

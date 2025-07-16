@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -99,22 +98,24 @@ const Sparkles = () => {
     );
 };
 
-function MessageContent() {
-  const searchParams = useSearchParams();
+function MessageContent({ id }: { id: string }) {
   const [data, setData] = useState<BirthdayData | null>(null);
 
   useEffect(() => {
-    const encodedData = searchParams.get("data");
-    if (encodedData) {
+    if (id) {
       try {
-        const decodedData = atob(encodedData);
-        const parsedData = JSON.parse(decodedData);
-        setData(parsedData.template ? parsedData : { ...parsedData, template: 'classic' });
+        const storedData = sessionStorage.getItem(`birthday_data_${id}`);
+        if(storedData) {
+            const parsedData = JSON.parse(storedData);
+            setData(parsedData.template ? parsedData : { ...parsedData, template: 'classic' });
+        } else {
+            console.error("No message data found in session storage.");
+        }
       } catch (error) {
         console.error("Failed to parse message data:", error);
       }
     }
-  }, [searchParams]);
+  }, [id]);
 
   if (!data) {
     return (
@@ -177,14 +178,14 @@ function MessageContent() {
 }
 
 
-export function MessageDisplay() {
+export function MessageDisplay({ id }: { id: string }) {
   return (
     <Suspense fallback={
         <div className="flex items-center justify-center min-h-screen text-xl font-body text-primary">
             Unwrapping your message...
         </div>
     }>
-      <MessageContent />
+      <MessageContent id={id} />
     </Suspense>
   );
 }

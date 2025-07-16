@@ -1,9 +1,10 @@
+
 import { MessageDisplay } from "@/components/MessageDisplay";
 
-export default function MessagePage() {
+export default function MessagePage({ params }: { params: { id: string } }) {
   return (
     <main>
-      <MessageDisplay />
+      <MessageDisplay id={params.id} />
     </main>
   );
 }
