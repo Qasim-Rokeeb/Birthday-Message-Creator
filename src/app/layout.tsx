@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'BirthdayScheduler',
-  description: 'Create and schedule personalized birthday messages.',
+  title: 'Birthday Wish Creator',
+  description: 'Create and share personalized birthday messages.',
 };
 
 export default function RootLayout({

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, WandSparkles, Loader2, Send, Gift, ImagePlus, User, Mail } from "lucide-react";
+import { CalendarIcon, WandSparkles, Loader2, Send, Gift, ImagePlus, User, Mail, Palette } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +27,8 @@ import { MessagePreview } from "@/components/MessagePreview";
 import { generateMessageSuggestions } from "@/ai/flows/generate-message-suggestions";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import Image from "next/image";
 
 const formSchema = z.object({
   senderName: z.string().min(2, {
@@ -44,7 +46,16 @@ const formSchema = z.object({
     message: "Message must not be longer than 500 characters."
   }),
   image: z.any().optional(),
+  template: z.enum(['classic', 'modern', 'playful'], {
+    required_error: "Please select a template."
+  }),
 });
+
+const templates = [
+  { id: 'classic', name: 'Classic Elegance', image: 'https://placehold.co/150x100.png', hint: 'elegant' },
+  { id: 'modern', name: 'Modern Chic', image: 'https://placehold.co/150x100.png', hint: 'modern' },
+  { id: 'playful', name: 'Playful Fun', image: 'https://placehold.co/150x100.png', hint: 'playful' },
+]
 
 export function BirthdaySchedulerForm() {
   const router = useRouter();
@@ -59,10 +70,11 @@ export function BirthdaySchedulerForm() {
       senderName: "",
       recipientName: "",
       message: "",
+      template: "classic",
     },
   });
 
-  const { recipientName, senderName, message } = form.watch();
+  const { recipientName, senderName, message, template } = form.watch();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -252,6 +264,47 @@ export function BirthdaySchedulerForm() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="template"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="flex items-center gap-2"><Palette className="w-4 h-4" /> Choose a Template</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="grid grid-cols-2 md:grid-cols-3 gap-4"
+                      >
+                        {templates.map((template) => (
+                           <FormItem key={template.id} className="relative">
+                              <FormControl>
+                                <RadioGroupItem value={template.id} className="sr-only" />
+                              </FormControl>
+                              <FormLabel className={cn(
+                                "flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all",
+                                field.value === template.id && "border-primary"
+                              )}>
+                                <Image 
+                                  src={template.image} 
+                                  alt={template.name}
+                                  width={150} 
+                                  height={100}
+                                  className="rounded-md object-cover"
+                                  data-ai-hint={template.hint}
+                                />
+                                <span className="font-semibold mt-2 text-sm">{template.name}</span>
+                              </FormLabel>
+                           </FormItem>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button type="submit" disabled={isSubmitting} className="w-full text-lg py-6 rounded-full shadow-lg hover:shadow-xl transition-shadow">
                 {isSubmitting ? <Loader2 className="animate-spin" /> : <Send />}
                 Create & Get Link
@@ -261,7 +314,7 @@ export function BirthdaySchedulerForm() {
         </CardContent>
       </Card>
       <div className="sticky top-24">
-        <MessagePreview recipientName={recipientName} senderName={senderName} message={message} imageDataUrl={imageDataUrl} />
+        <MessagePreview recipientName={recipientName} senderName={senderName} message={message} imageDataUrl={imageDataUrl} template={template} />
       </div>
     </div>
   );

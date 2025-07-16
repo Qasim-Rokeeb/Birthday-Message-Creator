@@ -1,17 +1,48 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { PartyPopper, Gift, Sparkle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PartyPopper, Gift, Sparkle, Heart, Cake } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 type BirthdayData = {
   recipientName: string;
   senderName: string;
   message: string;
   imageDataUrl?: string;
+  template: 'classic' | 'modern' | 'playful';
+};
+
+const templates = {
+  classic: {
+    bg: "bg-gradient-to-br from-rose-50 to-amber-50",
+    card: "bg-white/80 backdrop-blur-lg rounded-3xl border-primary/20",
+    title: "font-headline text-primary",
+    prose: "prose-2xl font-body text-foreground/80 bg-black/5",
+    footer: "text-muted-foreground italic",
+    icon: Gift,
+  },
+  modern: {
+    bg: "bg-gradient-to-br from-slate-900 to-slate-800",
+    card: "bg-black/50 backdrop-blur-xl rounded-xl border-slate-700",
+    title: "font-sans font-bold text-white tracking-tight",
+    prose: "prose-xl font-sans text-slate-300",
+    footer: "text-slate-400",
+    icon: Cake,
+  },
+  playful: {
+    bg: "bg-gradient-to-br from-violet-100 via-pink-100 to-blue-100",
+    card: "bg-white/70 backdrop-blur-md rounded-2xl border-white transform -rotate-1",
+    title: "font-headline text-pink-500",
+    prose: "prose-2xl font-body text-gray-700",
+    footer: "text-gray-500 font-bold",
+    icon: Heart,
+  },
 };
 
 const Sparkles = () => {
@@ -43,8 +74,7 @@ const Sparkles = () => {
     );
 };
 
-
-export function MessageDisplay() {
+function MessageContent() {
   const searchParams = useSearchParams();
   const [data, setData] = useState<BirthdayData | null>(null);
 
@@ -53,7 +83,8 @@ export function MessageDisplay() {
     if (encodedData) {
       try {
         const decodedData = atob(encodedData);
-        setData(JSON.parse(decodedData));
+        const parsedData = JSON.parse(decodedData);
+        setData(parsedData.template ? parsedData : { ...parsedData, template: 'classic' });
       } catch (error) {
         console.error("Failed to parse message data:", error);
       }
@@ -72,14 +103,21 @@ export function MessageDisplay() {
     );
   }
 
+  const theme = templates[data.template] || templates.classic;
+  const Icon = theme.icon;
+
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-rose-50 to-amber-50 overflow-hidden p-4 animate-fade-in">
-      <Sparkles />
-      <Card className="w-full max-w-2xl text-center shadow-2xl p-4 md:p-8 transform transition-all duration-500 hover:scale-[1.02] z-10 bg-white/80 backdrop-blur-lg rounded-3xl border-primary/20">
+    <div className={cn("relative flex items-center justify-center min-h-screen overflow-hidden p-4 animate-fade-in", theme.bg)}>
+      {data.template === 'classic' && <Sparkles />}
+      <Card className={cn(
+          "w-full max-w-2xl text-center shadow-2xl p-4 md:p-8 transform transition-all duration-500 z-10",
+          theme.card,
+          data.template === 'playful' ? 'animate-wiggle' : 'hover:scale-[1.02]'
+        )}>
         <CardHeader>
           <div className="flex justify-center items-center gap-4">
-            <Gift className="w-10 h-10 md:w-12 md:h-12 text-primary" />
-            <CardTitle className="font-headline text-4xl md:text-6xl text-primary">
+            <Icon className="w-10 h-10 md:w-12 md:h-12 text-primary" />
+            <CardTitle className={cn("text-4xl md:text-6xl", theme.title)}>
               Happy Birthday, {data.recipientName}!
             </CardTitle>
             <PartyPopper className="w-10 h-10 md:w-12 md:h-12 text-primary" />
@@ -96,14 +134,33 @@ export function MessageDisplay() {
                 />
             </div>
           )}
-          <div className="prose prose-2xl mx-auto font-body text-foreground/80 bg-black/5 p-6 rounded-xl">
+          <div className={cn("prose mx-auto p-6 rounded-xl", theme.prose)}>
             <p>{data.message}</p>
           </div>
         </CardContent>
-        <CardFooter className="mt-8 justify-end">
-          <p className="font-body text-xl text-muted-foreground italic">With love, from {data.senderName}</p>
+        <CardFooter className="mt-8 justify-between items-center">
+            <Link href="/" passHref>
+                <Button variant="ghost" className="text-xs text-muted-foreground hover:bg-black/10">
+                    Create Yours
+                </Button>
+            </Link>
+            <p className={cn("font-body text-xl", theme.footer)}>With love, from {data.senderName}</p>
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+
+export function MessageDisplay() {
+  // Use Suspense to handle client-side data fetching from URL
+  return (
+    <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen text-xl font-body text-primary">
+            Unwrapping your message...
+        </div>
+    }>
+      <MessageContent />
+    </Suspense>
   );
 }

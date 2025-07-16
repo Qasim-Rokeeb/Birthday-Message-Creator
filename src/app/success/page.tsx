@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Link as LinkIcon, Copy, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Image from "next/image";
 
 type BirthdayData = {
   recipientName: string;
@@ -15,6 +14,7 @@ type BirthdayData = {
   message: string;
   birthday: string;
   imageDataUrl?: string;
+  template: 'classic' | 'modern' | 'playful';
 };
 
 function SuccessContent() {

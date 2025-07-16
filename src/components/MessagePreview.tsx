@@ -9,19 +9,38 @@ type MessagePreviewProps = {
   senderName: string;
   message: string;
   imageDataUrl: string | null;
+  template: 'classic' | 'modern' | 'playful';
 };
 
-export function MessagePreview({ recipientName, senderName, message, imageDataUrl }: MessagePreviewProps) {
+export function MessagePreview({ recipientName, senderName, message, imageDataUrl, template }: MessagePreviewProps) {
+  
+  const templateStyles = {
+    classic: {
+        cardBg: "bg-card/80",
+        titleColor: "text-primary"
+    },
+    modern: {
+        cardBg: "bg-slate-800",
+        titleColor: "text-white"
+    },
+    playful: {
+        cardBg: "bg-pink-50",
+        titleColor: "text-pink-500"
+    }
+  }
+
+  const styles = templateStyles[template] || templateStyles.classic;
+
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-primary/20 shadow-xl transition-all duration-300 rounded-2xl">
+    <Card className={`backdrop-blur-sm border-primary/20 shadow-xl transition-all duration-300 rounded-2xl ${styles.cardBg}`}>
       <CardHeader className="text-center">
         <CardDescription>PREVIEW</CardDescription>
         <div className="flex justify-center items-center gap-4 mt-2">
-          <Gift className="w-8 h-8 text-primary animate-pulse" />
-          <CardTitle className="font-headline text-3xl text-primary">
+          <Gift className={`w-8 h-8 ${styles.titleColor} animate-pulse`} />
+          <CardTitle className={`font-headline text-3xl ${styles.titleColor}`}>
             Happy Birthday, {recipientName || "..."}!
           </CardTitle>
-          <PartyPopper className="w-8 h-8 text-primary animate-pulse" />
+          <PartyPopper className={`w-8 h-8 ${styles.titleColor} animate-pulse`} />
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
