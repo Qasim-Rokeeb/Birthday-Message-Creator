@@ -1,10 +1,12 @@
-
+// src/app/message/[id]/page.tsx
 import { MessageDisplay } from "@/components/MessageDisplay";
 
-export default function MessagePage({ params }: { params: { id: string } }) {
+export default async function MessagePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  
   return (
     <main>
-      <MessageDisplay id={params.id} />
+      <MessageDisplay id={id} />
     </main>
   );
 }
