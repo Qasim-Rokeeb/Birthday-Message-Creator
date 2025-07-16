@@ -12,9 +12,25 @@ This project is built using the following technologies:
 *   **TypeScript**: A superset of JavaScript that adds static typing.
 *   **Tailwind CSS**: A utility-first CSS framework.
 
-## Local Development
+## 🛠️ Installation & Running Locally
 
-To run the application locally, follow these steps. If you are contributing to the project, you can find the repository at [https://github.com/Qasim-Rokeeb/birthday-message-app](https://github.com/Qasim-Rokeeb/birthday-message-app), managed by Qasim Rokeeb.
+```bash
+git clone https://github.com/Qasim-Rokeeb/Birthday-Message-Creator.git
+cd productivity-timer-dashboard
+npm install
+npm run dev
+```
 
-1. Clone the repository from GitHub:
+---
+
+
+## 🙋‍♂️ About Me
+
+- 🔗 Portfolio: [qasimrokeeb.vercel.app](https://qasimrokeeb.vercel.app)
+- 🐦 Twitter: [@qasimrokeeb](https://x.com/qasimrokeeb)
+- 💻 GitHub: [Qasim-Rokeeb](https://github.com/Qasim-Rokeeb)
+
+---
+
+Made with 💻 by [Qasim Rokeeb](https://github.com/Qasim-Rokeeb)
 
