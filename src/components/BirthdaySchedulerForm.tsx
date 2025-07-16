@@ -47,7 +47,7 @@ const formSchema = z.object({
   }).max(500, {
     message: "Message must not be longer than 500 characters."
   }),
-  image: z.any().optional(),
+  imageFile: z.any().optional(),
   template: z.enum(['classic', 'modern', 'playful', 'vibrant', 'cozy', 'minimalist']),
 });
 
@@ -138,15 +138,15 @@ export function BirthdaySchedulerForm({ selectedTemplate }: { selectedTemplate: 
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
+    const { imageFile, ...restOfValues } = values;
+
     const data = {
-      ...values,
+      ...restOfValues,
       birthday: format(values.birthday, 'PPP'),
-      image: imageDataUrl,
+      imageDataUrl: imageDataUrl,
     };
-    // @ts-ignore
-    delete data.image; 
-    const finalData = {...data, imageDataUrl};
-    const encodedData = btoa(JSON.stringify(finalData));
+
+    const encodedData = btoa(JSON.stringify(data));
     router.push(`/success?data=${encodedData}`);
   };
 
@@ -234,7 +234,7 @@ export function BirthdaySchedulerForm({ selectedTemplate }: { selectedTemplate: 
               />
               <FormField
                 control={form.control}
-                name="image"
+                name="imageFile"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><ImagePlus className="w-4 h-4" /> Add an Image (Optional)</FormLabel>
