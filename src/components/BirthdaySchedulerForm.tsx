@@ -6,12 +6,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, WandSparkles, Loader2, Send, CalendarPlus } from "lucide-react";
+import { CalendarIcon, WandSparkles, Loader2, Send, CalendarPlus, ImagePlus, User, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,8 +29,14 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
+  senderName: z.string().min(2, {
+    message: "Sender's name must be at least 2 characters.",
+  }),
   recipientName: z.string().min(2, {
     message: "Recipient's name must be at least 2 characters.",
+  }),
+  recipientEmail: z.string().email({
+    message: "Please enter a valid email address.",
   }),
   birthday: z.date({
     required_error: "A birthday is required.",
@@ -39,24 +46,49 @@ const formSchema = z.object({
   }).max(500, {
     message: "Message must not be longer than 500 characters."
   }),
+  image: z.any().optional(),
 });
 
 export function BirthdaySchedulerForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSuggesting, setIsSuggesting] = useState(false);
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      senderName: "",
       recipientName: "",
+      recipientEmail: "",
       message: "",
     },
   });
 
   const recipientName = form.watch("recipientName");
+  const senderName = form.watch("senderName");
   const message = form.watch("message");
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        toast({
+          variant: "destructive",
+          title: "Image too large",
+          description: "Please upload an image smaller than 2MB.",
+        });
+        e.target.value = ""; // Reset file input
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageDataUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
   const handleSuggestMessage = async () => {
     setIsSuggesting(true);
     const { recipientName, message, birthday } = form.getValues();
@@ -93,8 +125,12 @@ export function BirthdaySchedulerForm() {
     const data = {
       ...values,
       birthday: format(values.birthday, 'PPP'),
+      image: imageDataUrl, // Pass the data URL
     };
-    const encodedData = btoa(JSON.stringify(data));
+    // @ts-ignore
+    delete data.image; // remove the File object if it exists
+    const finalData = {...data, imageDataUrl};
+    const encodedData = btoa(JSON.stringify(finalData));
     router.push(`/success?data=${encodedData}&sent=${sentNow}`);
   };
 
@@ -107,14 +143,40 @@ export function BirthdaySchedulerForm() {
         <CardContent>
           <Form {...form}>
             <form className="space-y-6">
+               <FormField
+                control={form.control}
+                name="senderName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><User /> Your Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="recipientName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Recipient's Name</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><User /> Recipient's Name</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g. Jane Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="recipientEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><Mail /> Recipient's Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="e.g. jane.doe@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -165,6 +227,20 @@ export function BirthdaySchedulerForm() {
               />
               <FormField
                 control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><ImagePlus /> Add an Image (Optional)</FormLabel>
+                    <FormControl>
+                      <Input type="file" accept="image/png, image/jpeg, image/gif" onChange={handleImageChange} />
+                    </FormControl>
+                    <FormDescription>Max file size: 2MB.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="message"
                 render={({ field }) => (
                   <FormItem>
@@ -206,7 +282,7 @@ export function BirthdaySchedulerForm() {
         </CardContent>
       </Card>
       <div className="sticky top-24">
-        <MessagePreview recipientName={recipientName} message={message} />
+        <MessagePreview recipientName={recipientName} senderName={senderName} message={message} imageDataUrl={imageDataUrl} />
       </div>
     </div>
   );

@@ -2,13 +2,16 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { PartyPopper, Gift, Sparkle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type BirthdayData = {
   recipientName: string;
+  senderName: string;
   message: string;
+  imageDataUrl?: string;
 };
 
 const Sparkles = () => {
@@ -76,11 +79,24 @@ export function MessageDisplay() {
             <PartyPopper className="w-10 h-10 md:w-12 md:h-12 text-primary" />
           </div>
         </CardHeader>
-        <CardContent className="mt-4">
+        <CardContent className="mt-4 space-y-6">
+          {data.imageDataUrl && (
+             <div className="relative aspect-video w-full max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
+                <Image
+                    src={data.imageDataUrl}
+                    alt={`Birthday surprise for ${data.recipientName}`}
+                    layout="fill"
+                    objectFit="cover"
+                />
+            </div>
+          )}
           <div className="prose prose-xl mx-auto font-body text-foreground">
             <p>{data.message}</p>
           </div>
         </CardContent>
+        <CardFooter className="mt-6 justify-end">
+          <p className="font-body text-muted-foreground">With love, from {data.senderName}</p>
+        </CardFooter>
       </Card>
     </div>
   );

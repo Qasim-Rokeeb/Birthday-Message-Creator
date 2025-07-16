@@ -10,8 +10,11 @@ import { useToast } from "@/hooks/use-toast";
 
 type BirthdayData = {
   recipientName: string;
+  recipientEmail: string;
+  senderName: string;
   message: string;
   birthday: string;
+  imageDataUrl?: string;
 };
 
 function SuccessContent() {
@@ -85,12 +88,12 @@ function SuccessContent() {
           </div>
           
           <div className="p-4 border-t">
-            <h3 className="font-bold mb-2 text-center text-muted-foreground">Simulated Email Preview</h3>
+            <h3 className="font-bold mb-2 text-center text-muted-foreground">Email Confirmation</h3>
             <div className="p-6 bg-white dark:bg-card rounded-lg shadow-inner border">
-              <h4 className="font-bold text-lg text-foreground">Subject: A Special Birthday Surprise!</h4>
+              <h4 className="font-bold text-lg text-foreground">Subject: A Special Birthday Surprise from {data.senderName}!</h4>
               <hr className="my-4"/>
               <p className="text-foreground">Hello {data.recipientName},</p>
-              <p className="my-4 text-foreground">You've received a special birthday message! Click the button below to view it.</p>
+              <p className="my-4 text-foreground">{data.senderName} has sent you a special birthday message! Click the button below to view it.</p>
               <div className="text-center my-6">
                 <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
                     <a href="#">View Your Message</a>
@@ -98,7 +101,9 @@ function SuccessContent() {
               </div>
               <p className="text-sm text-muted-foreground">Warmly,<br/>The BirthdayScheduler Team</p>
             </div>
-            <p className="text-xs text-center mt-2 text-muted-foreground">An email like this will be sent on {data.birthday}.</p>
+            <p className="text-xs text-center mt-2 text-muted-foreground">
+              An email like this will be sent to <span className="font-semibold">{data.recipientEmail}</span> on {data.birthday}.
+            </p>
           </div>
         </CardContent>
       </Card>
