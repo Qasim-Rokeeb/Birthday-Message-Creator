@@ -21,39 +21,39 @@ type BirthdayData = {
 
 const templates = {
   classic: {
-    bg: "bg-gradient-to-br from-rose-50 to-amber-50",
-    card: "bg-white/80 backdrop-blur-lg rounded-3xl border-primary/20",
+    bg: "bg-gradient-to-br from-gray-50 via-stone-50 to-gray-100",
+    card: "bg-white/80 backdrop-blur-lg rounded-3xl border-primary/20 shadow-xl",
     title: "font-headline text-primary",
-    prose: "prose-2xl font-body text-foreground/80 bg-black/5",
+    prose: "prose-2xl font-body text-foreground/80",
     footer: "text-muted-foreground italic",
     icon: Gift,
   },
   modern: {
-    bg: "bg-gradient-to-br from-slate-900 to-slate-800",
-    card: "bg-black/50 backdrop-blur-xl rounded-xl border-slate-700",
+    bg: "bg-gradient-to-br from-slate-900 via-black to-slate-800",
+    card: "bg-slate-800/60 backdrop-blur-2xl rounded-xl border border-slate-700 shadow-2xl shadow-blue-500/10",
     title: "font-sans font-bold text-white tracking-tight",
     prose: "prose-xl font-sans text-slate-300",
     footer: "text-slate-400",
     icon: Cake,
   },
   playful: {
-    bg: "bg-gradient-to-br from-violet-100 via-pink-100 to-blue-100",
-    card: "bg-white/70 backdrop-blur-md rounded-2xl border-white transform -rotate-1",
+    bg: "bg-gradient-to-br from-purple-200 via-rose-200 to-amber-200",
+    card: "bg-white/80 backdrop-blur-md rounded-2xl border-white transform -rotate-2 shadow-2xl transition-transform duration-500 hover:rotate-0",
     title: "font-headline text-pink-500",
     prose: "prose-2xl font-body text-gray-700",
     footer: "text-gray-500 font-bold",
     icon: PartyPopper,
   },
    vibrant: {
-    bg: "bg-gradient-to-br from-yellow-200 via-orange-300 to-red-400",
-    card: "bg-white/80 backdrop-blur-lg rounded-3xl border-white/50",
+    bg: "bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-yellow-200 via-red-500 to-fuchsia-500",
+    card: "bg-white/70 backdrop-blur-lg rounded-3xl border-white/50 shadow-2xl",
     title: "font-headline text-orange-600",
     prose: "prose-2xl font-body text-gray-800",
     footer: "text-orange-800/80 font-bold",
     icon: Sun,
   },
   cozy: {
-    bg: "bg-gradient-to-br from-green-100 to-teal-100",
+    bg: "bg-gradient-to-br from-emerald-100 via-cyan-100 to-sky-200",
     card: "bg-white/90 backdrop-blur-sm rounded-2xl border-green-200/50 shadow-lg",
     title: "font-headline text-green-800",
     prose: "prose-2xl font-body text-gray-600",
@@ -61,8 +61,8 @@ const templates = {
     icon: Heart,
   },
   minimalist: {
-    bg: "bg-gray-100",
-    card: "bg-white rounded-lg border-gray-200",
+    bg: "bg-gradient-to-br from-slate-50 to-white",
+    card: "bg-white/50 backdrop-blur-sm rounded-lg border-gray-200/80 shadow-md",
     title: "font-sans font-semibold text-gray-800",
     prose: "prose-xl font-sans text-gray-500",
     footer: "text-gray-400",
@@ -135,9 +135,9 @@ function MessageContent() {
     <div className={cn("relative flex items-center justify-center min-h-screen overflow-hidden p-4 animate-fade-in", theme.bg)}>
       {data.template === 'classic' && <Sparkles />}
       <Card className={cn(
-          "w-full max-w-2xl text-center shadow-2xl p-4 md:p-8 transform transition-all duration-500 z-10",
+          "w-full max-w-2xl text-center p-4 md:p-8 transform transition-all duration-500 z-10",
           theme.card,
-          data.template === 'playful' ? 'animate-wiggle' : 'hover:scale-[1.02]'
+          data.template === 'playful' ? '' : 'hover:scale-[1.02]'
         )}>
         <CardHeader>
           <div className="flex justify-center items-center gap-4">
