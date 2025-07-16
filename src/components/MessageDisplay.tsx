@@ -45,10 +45,10 @@ const templates = {
   },
    vibrant: {
     bg: "bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-yellow-200 via-red-500 to-fuchsia-500",
-    card: "bg-white/70 backdrop-blur-lg rounded-3xl border-white/50 shadow-2xl",
-    title: "font-headline text-orange-600",
-    prose: "prose-2xl font-body text-gray-800",
-    footer: "text-orange-800/80 font-bold",
+    card: "bg-gray-900/80 backdrop-blur-lg rounded-3xl border-white/20 shadow-2xl",
+    title: "font-headline text-white",
+    prose: "prose-2xl font-body text-gray-200",
+    footer: "text-gray-300 font-bold",
     icon: Sun,
   },
   cozy: {

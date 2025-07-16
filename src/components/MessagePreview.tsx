@@ -33,7 +33,7 @@ export function MessagePreview({ recipientName, senderName, message, imageDataUr
     },
     vibrant: {
         cardBg: "bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-yellow-200 via-red-500 to-fuchsia-500",
-        titleColor: "text-orange-600"
+        titleColor: "text-white"
     },
     cozy: {
         cardBg: "bg-gradient-to-br from-emerald-100 to-sky-200",
@@ -46,7 +46,7 @@ export function MessagePreview({ recipientName, senderName, message, imageDataUr
   }
 
   const styles = templateStyles[template] || templateStyles.classic;
-  const isDark = template === 'modern';
+  const isDark = ['modern', 'vibrant'].includes(template);
 
   return (
     <Card className={cn("backdrop-blur-sm border-primary/20 shadow-xl transition-all duration-300 rounded-2xl", styles.cardBg)}>
