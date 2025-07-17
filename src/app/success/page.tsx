@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Link as LinkIcon, Copy, Gift } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { makeId } from "@/lib/utils";
 
 type BirthdayData = {
   recipientName: string;
@@ -16,7 +15,7 @@ type BirthdayData = {
   message: string;
   birthday: string;
   imageDataUrl?: string;
-  template: string;
+  template: 'classic' | 'modern' | 'playful' | 'vibrant' | 'cozy' | 'minimalist';
 };
 
 function SuccessContent() {
@@ -29,18 +28,26 @@ function SuccessContent() {
     const id = searchParams.get("id");
     if (!id) return;
 
-    const stored = sessionStorage.getItem(`birthday_data_${id}`);
-    if (!stored) return;
-
-    try {
-      const parsed: BirthdayData = JSON.parse(stored);
-      const shortId = makeId();
-      localStorage.setItem(`msg_${shortId}`, stored); // store full JSON
-      setShareLink(`${window.location.origin}/message/${shortId}`);
-      setData(parsed);
-    } catch {
-      /* ignore */
+    const storedData = sessionStorage.getItem(`birthday_data_${id}`);
+    if (!storedData) {
+      console.error("No data found in session storage for this id.");
+      return;
     }
+
+    (async () => {
+      try {
+        const parsed: BirthdayData = JSON.parse(storedData);
+        const res = await fetch("/api/store", {
+          method: "POST",
+          body: JSON.stringify(parsed),
+        });
+        const { id: shortId } = await res.json();
+        setShareLink(`${window.location.origin}/message/${shortId}`);
+        setData(parsed);
+      } catch (e) {
+        console.error("Failed to upload message:", e);
+      }
+    })();
   }, [searchParams]);
 
   const copyToClipboard = () => {
@@ -77,7 +84,7 @@ function SuccessContent() {
               <LinkIcon className="w-5 h-5" /> Your Sharable Link
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Copy this link and send it to {data.recipientName}. Anyone on this browser can view the message.
+              Copy this link and send it to {data.recipientName}. Anyone with the link can view the message.
             </p>
             <div className="flex items-center gap-2">
               <input
@@ -94,7 +101,12 @@ function SuccessContent() {
 
           <div className="text-center">
             <Link href={shareLink} passHref target="_blank">
-              <Button size="lg">Preview Your Message</Button>
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-lg py-6 px-8 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+              >
+                Preview Your Message
+              </Button>
             </Link>
           </div>
 
@@ -102,7 +114,7 @@ function SuccessContent() {
             <Gift className="w-8 h-8 mx-auto text-primary" />
             <p className="font-bold">Happy sharing!</p>
             <p className="text-sm text-muted-foreground">
-              On {data.birthday}, send the link to {data.recipientName}.
+              On {data.birthday}, send the link to {data.recipientName} via email, text, or any way you like!
             </p>
           </div>
         </CardContent>

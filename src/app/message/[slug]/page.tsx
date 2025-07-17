@@ -1,7 +1,6 @@
 // src/app/message/[slug]/page.tsx
 "use client";
 
-import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -94,22 +93,23 @@ const Sparkles = () => {
   );
 };
 
-export default function MessagePage({ params }: { params: { slug: string } }) {
+export default function MessagePage({ params }: { params: Promise<{ slug: string }> }) {
   const [data, setData] = useState<BirthdayData | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem(`msg_${params.slug}`);
-    if (!raw) {
-      setError(true);
-      return;
-    }
-    try {
-      setData(JSON.parse(raw));
-    } catch {
-      setError(true);
-    }
-  }, [params.slug]);
+    (async () => {
+      try {
+        const { slug } = await params;              // unwrap Promise
+        const res = await fetch(`/api/store?id=${slug}`);
+        if (!res.ok) throw new Error("404");
+        const json = await res.json();
+        setData(json);
+      } catch {
+        setError(true);
+      }
+    })();
+  }, [params]);
 
   if (error || !data) {
     return (
@@ -117,10 +117,7 @@ export default function MessagePage({ params }: { params: { slug: string } }) {
         <Card className="max-w-lg text-center shadow-xl p-8 rounded-2xl">
           <Gift className="w-16 h-16 mx-auto text-gray-400 mb-4" />
           <h2 className="text-2xl font-bold mb-2">Message Not Found</h2>
-          <p className="text-gray-500 mb-6">
-            This link was created on another device (or the message expired).<br />
-            Ask the sender to resend it from the same browser they used to create it.
-          </p>
+          <p className="text-gray-500 mb-6">The link may be invalid or expired.</p>
           <Link href="/" passHref>
             <Button>Create New Message</Button>
           </Link>
@@ -129,7 +126,7 @@ export default function MessagePage({ params }: { params: { slug: string } }) {
     );
   }
 
-  const theme = templates[data.template] || templates.classic;
+  const theme = templates[data.template as keyof typeof templates] ?? templates.classic;
   const Icon = theme.icon;
 
   return (
