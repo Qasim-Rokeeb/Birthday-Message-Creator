@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Birthday Message Creator',
     description: 'Create and share personalized birthday messages with ease.',
-    url: 'https://birthday-wish-creator.vercel.app',
+    url: 'https://birthday-message-creator.vercel.app/',
     images: [
       {
         url: '/og-image.png',
