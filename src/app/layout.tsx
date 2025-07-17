@@ -5,6 +5,20 @@ import { Toaster } from "@/components/ui/toaster"
 export const metadata: Metadata = {
   title: 'Birthday Wish Creator',
   description: 'Create and share personalized birthday messages.',
+  openGraph: {
+    title: 'Birthday Message Creator',
+    description: 'Create and share personalized birthday messages with ease.',
+    url: 'https://birthday-wish-creator.vercel.app',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        type: 'image/png',
+      },
+    ],
+  },
+ 
 };
 
 export default function RootLayout({
