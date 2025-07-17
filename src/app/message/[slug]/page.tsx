@@ -20,7 +20,7 @@ type BirthdayData = {
 
 const templates = {
   classic: {
-    bg: "bg-gradient-to-br from-gray-50 via-stone-50 to-gray-100",
+    bg: "bg-gradient-to-br from-rose-100 via-stone-50 to-rose-200 dark:from-rose-900 dark:to-stone-800",
     card: "bg-white/80 backdrop-blur-lg rounded-3xl border-primary/20 shadow-xl",
     title: "font-headline text-primary",
     prose: "prose-2xl font-body text-foreground/80",
@@ -66,7 +66,32 @@ const templates = {
     prose: "prose-xl font-sans text-gray-500",
     footer: "text-gray-400",
     icon: Sparkle,
-  }
+  },
+  // NEW
+  neon: {
+    bg: "bg-gradient-to-br from-cyan-400 via-pink-500 to-purple-600 dark:from-cyan-900 dark:to-purple-900",
+    card: "bg-black/80 backdrop-blur-lg rounded-3xl border-cyan-400/50 shadow-2xl shadow-cyan-500/30",
+    title: "font-mono text-cyan-400 tracking-widest uppercase",
+    prose: "prose-xl font-mono text-pink-400",
+    footer: "text-purple-400",
+    icon: Sparkle,
+  },
+  retro: {
+    bg: "bg-gradient-to-br from-orange-400 via-red-500 to-yellow-400 dark:from-orange-800 dark:to-red-800",
+    card: "bg-orange-100/80 backdrop-blur-md rounded-2xl border-orange-400 shadow-2xl shadow-orange-500/30",
+    title: "font-sans text-orange-600 font-extrabold tracking-tight",
+    prose: "prose-xl font-sans text-red-600",
+    footer: "text-yellow-600 italic",
+    icon: PartyPopper,
+  },
+  ocean: {
+    bg: "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:to-blue-800",
+    card: "bg-teal-100/80 backdrop-blur-md rounded-2xl border-teal-400 shadow-2xl shadow-teal-500/30",
+    title: "font-sans text-teal-700",
+    prose: "prose-xl font-sans text-cyan-700",
+    footer: "text-blue-700 italic",
+    icon: Heart,
+  },
 };
 
 const Sparkles = () => {
