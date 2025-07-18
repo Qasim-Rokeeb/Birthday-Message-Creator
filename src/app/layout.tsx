@@ -24,9 +24,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        type: 'image/png',
+        alt: 'Birthday Message Creator',
       },
     ],
   },
