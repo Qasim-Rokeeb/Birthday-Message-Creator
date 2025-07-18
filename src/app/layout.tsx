@@ -18,6 +18,18 @@ export const metadata: Metadata = {
       },
     ],
   },
+    twitter: {
+    title: 'Birthday Message Creator',
+    description: 'Create and share personalized birthday messages with ease.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        type: 'image/png',
+      },
+    ],
+  },
  
 };
 
