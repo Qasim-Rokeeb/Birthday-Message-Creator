@@ -47,7 +47,7 @@ export function MessagePreview({ recipientName, senderName, message, imageDataUr
     },
     retro: {
       cardBg: "bg-gradient-to-br from-orange-400 via-red-500 to-yellow-400 dark:from-orange-800 dark:to-red-800",
-      titleColor: "text-orange-600"
+      titleColor: "text-white"
     },
     ocean: {
       cardBg: "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500 dark:from-teal-800 dark:to-blue-800",

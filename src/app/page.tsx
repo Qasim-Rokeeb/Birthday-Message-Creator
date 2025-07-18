@@ -29,7 +29,7 @@ export default function Home() {
           <Sparkles className="absolute -top-2 -right-2 w-5 h-5 text-amber-400 animate-ping" />
         </div>
         <h1 className="font-headline text-4xl sm:text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-purple-600 to-pink-600 mt-6">
-          Birthday Wish Creator
+          Birthday Message Creator
         </h1>
         <p className="max-w-2xl mt-4 text-base sm:text-lg text-muted-foreground">
           Craft unforgettable, AI-powered birthday messages in seconds.
