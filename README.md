@@ -7,30 +7,13 @@ This application allows you to create personalized birthday messages for your fr
 
 This project is built using the following technologies:
 
-*   **Next.js**: A React framework for building server-side rendered and static web applications.
-*   **React**: A JavaScript library for building user interfaces.
-*   **TypeScript**: A superset of JavaScript that adds static typing.
-*   **Tailwind CSS**: A utility-first CSS framework.
+*   **Next.js**
+*   **React**
+*   **TypeScript**
+*   **Tailwind CSS**
 
-## 🛠️ Installation & Running Locally
-
-```bash
-git clone https://github.com/Qasim-Rokeeb/Birthday-Message-Creator.git
-cd productivity-timer-dashboard
-npm install
-npm run dev
-```
-
----
-
-
-## 🙋‍♂️ About Me
-
-- 🔗 Portfolio: [qasimrokeeb.vercel.app](https://qasimrokeeb.vercel.app)
-- 🐦 Twitter: [@qasimrokeeb](https://x.com/qasimrokeeb)
+(https://x.com/qasimrokeeb)
 - 💻 GitHub: [Qasim-Rokeeb](https://github.com/Qasim-Rokeeb)
-
----
 
 Made with 💻 by [Qasim Rokeeb](https://github.com/Qasim-Rokeeb)
 
