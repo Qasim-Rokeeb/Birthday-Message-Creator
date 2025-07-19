@@ -2,12 +2,12 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
 
-const redis = Redis.fromEnv(); // expects UPSTASH_URL & UPSTASH_TOKEN env vars
+const redis = Redis.fromEnv();
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const id = Math.random().toString(36).slice(2, 8); // 6-char key
-  await redis.set(id, JSON.stringify(body), { ex: 60 * 60 * 24 }); // 24 h TTL
+  const id = Math.random().toString(36).slice(2, 8);
+  await redis.set(id, JSON.stringify(body), { ex: 60 * 60 * 24 * 3 }); // 3 days
   return NextResponse.json({ id });
 }
 
