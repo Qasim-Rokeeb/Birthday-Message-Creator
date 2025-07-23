@@ -81,7 +81,7 @@ function SuccessContent() {
         <CardContent className="space-y-6 p-8 pt-0">
           <div className="p-6 bg-primary/5 rounded-xl border border-primary/10">
             <h3 className="font-bold text-lg mb-2 flex items-center gap-2 text-primary">
-              <LinkIcon className="w-5 h-5" /> Your Sharable Link
+              <LinkIcon className="w-5 h-5" /> Here is your Sharable Link
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
               Copy this link and send it to {data.recipientName}. Anyone with the link can view the message.
