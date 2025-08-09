@@ -75,7 +75,7 @@ function SuccessContent() {
             Your Message is Ready!
           </CardTitle>
           <CardDescription className="text-lg text-muted-foreground mt-2">
-            Share this special birthday page with {data.recipientName} on their birthday!
+            Share this special birthday page with {data.recipientName} on their birthday! 💖
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6 p-8 pt-0">
