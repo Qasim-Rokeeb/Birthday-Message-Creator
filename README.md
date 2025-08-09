@@ -12,6 +12,12 @@ This project is built using the following technologies:
 *   **TypeScript**: A superset of JavaScript that adds static typing.
 *   **Tailwind CSS**: A utility-first CSS framework.
 
+## 🌐 Deployment
+
+This project is deployed on [Vercel](https://vercel.com/) —  
+🔗 [Live Link](https://birthday-message-creator.vercel.app/)
+
+
 ## 🛠️ Installation & Running Locally
 
 ```bash

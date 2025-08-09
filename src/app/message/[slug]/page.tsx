@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PartyPopper, Gift, Sparkle, Heart, Cake, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+
 type BirthdayData = {
   recipientName: string;
   senderName: string;
@@ -145,6 +146,7 @@ export default function MessagePage({ params }: { params: Promise<{ slug: string
           <p className="text-gray-500 mb-6">The link may be invalid or expired.</p>
           <Link href="/" passHref>
             <Button>Create New Message</Button>
+            
           </Link>
         </Card>
       </div>
