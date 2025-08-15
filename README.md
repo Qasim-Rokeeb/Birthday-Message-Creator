@@ -18,6 +18,11 @@ This project is deployed on [Vercel](https://vercel.com/) —
 🔗 [Live Link](https://birthday-message-creator.vercel.app/)
 
 
+## 📸 Preview
+
+![Preview](https://raw.githubusercontent.com/Qasim-Rokeeb/birthday-message-creator/main/screenshot.png)
+
+
 ## 🛠️ Installation & Running Locally
 
 ```bash
