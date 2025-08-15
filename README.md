@@ -20,7 +20,7 @@ This project is deployed on [Vercel](https://vercel.com/) —
 
 ## 📸 Preview
 
-![Preview](https://birthday-message-creator/screenshot.png)
+![Preview](https://birthday-message-creator.vercel.app/screenshot.png)
 
 
 ## 🛠️ Installation & Running Locally
