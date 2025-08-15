@@ -21,6 +21,8 @@ This project is deployed on [Vercel](https://vercel.com/) —
 ## 📸 Preview
 
 ![Preview](https://birthday-message-creator.vercel.app/screenshot.png)
+![Styles](https://birthday-message-creator.vercel.app/styles.png)
+![Output](https://birthday-message-creator.vercel.app/output.png)
 
 
 ## 🛠️ Installation & Running Locally
